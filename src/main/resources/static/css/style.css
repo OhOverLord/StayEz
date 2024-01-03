@@ -1,0 +1,65 @@
+.navbar {
+    background-color: #333;
+}
+.navbar-brand {
+    color: #fff;
+}
+.nav-link {
+    color: #fff;
+}
+.btn-login {
+    background-color: #f0ad4e;
+    border-color: #f0ad4e;
+}
+.btn-signup {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+.card {
+    /* ... your existing styles ... */
+    transition: box-shadow 0.3s ease-in-out; /* Add transition for shadow effect */
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow appearance on hover */
+}
+
+.card-title {
+    border-bottom: 2px solid #333; /* Underline the title */
+    display: inline-block; /* Necessary for the border to fit the content */
+    margin-bottom: 0.75rem; /* Space between the title and the content */
+    padding-bottom: 0.25rem; /* Space between the title text and underline */
+    width: 100%;
+    font-weight: bold;
+}
+
+.card {
+    height: 100%; /* Make sure all cards are of equal height */
+    transition: box-shadow 0.3s ease-in-out; /* Add transition for smooth effect */
+}
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1); /* Horizontal offset, vertical offset, blur radius, spread radius, color */
+}
+.card-body {
+    display: flex;
+    flex-direction: column;
+}
+.card-text {
+    font-size: 0.9em; /* Adjust the font size as needed */
+    flex-grow: 1; /* Ensure that the text section expands to fill space */
+}
+.btn-primary {
+    margin-top: auto; /* Push the button to the bottom of the card */
+}
+.stars {
+    color: gold;
+}
+.reservation-section {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.guests-container .form-inline {
+    margin-bottom: 10px;
+}

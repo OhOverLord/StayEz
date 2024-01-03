@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation - StayEz</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        #search {
+            display: none;
+        }
+        .reservation-section {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .guests-container .form-inline {
+            margin-bottom: 10px;
+        }
+        #reservationForm {
+            margin-bottom: 100px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:insert="fragments/navbar :: navbar"></div>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Room Reservation</h2>
+
+    <!-- Room information -->
+    <div id="roomDetails" class="reservation-section"></div>
+
+    <!-- Reservation form -->
+    <form id="reservationForm">
+        <div class="reservation-section">
+            <h3>Customer Information</h3>
+            <!-- Customer information inputs -->
+            <div class="form-group">
+                <label for="customerFirstName">First Name</label>
+                <input type="text" class="form-control" id="customerFirstName" placeholder="First Name" required>
+            </div>
+            <div class="form-group">
+                <label for="customerLastName">Last Name</label>
+                <input type="text" class="form-control" id="customerLastName" placeholder="Last Name" required>
+            </div>
+            <div class="form-group">
+                <label for="customerEmail">Email</label>
+                <input type="email" class="form-control" id="customerEmail" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <label for="customerPhone">Phone Number</label>
+                <input type="tel" class="form-control" id="customerPhone" placeholder="Phone Number" required>
+            </div>
+            <div class="form-group">
+                <label for="customerAddress">Address</label>
+                <input type="text" class="form-control" id="customerAddress" placeholder="Address" required>
+            </div>
+        </div>
+
+        <div class="reservation-section">
+            <h3>Reservation Details</h3>
+            <!-- Reservation details inputs -->
+            <div class="form-group">
+                <label for="checkInDate">Check-in Date</label>
+                <input type="date" class="form-control" id="checkInDate" required>
+            </div>
+            <div class="form-group">
+                <label for="checkOutDate">Check-out Date</label>
+                <input type="date" class="form-control" id="checkOutDate" required>
+            </div>
+        </div>
+
+        <div class="reservation-section">
+            <h3>Guests Information</h3>
+            <div id="guestsContainer" class="guests-container">
+                <!-- Guest inputs will be added here dynamically -->
+            </div>
+            <button type="button" id="addGuestButton" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> Add Guest
+            </button>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitReservationButton" disabled>Submit Reservation</button>
+    </form>
+</div>
+
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    let maxGuestsAllowed = 0;
+
+    $(document).ready(function() {
+        updateSubmitButtonState();
+        var roomId = new URLSearchParams(window.location.search).get('id');
+        if (roomId) {
+            fetchRoomDetails(roomId);
+        } else {
+            alert('No room ID provided in the URL.');
+        }
+    });
+
+    function fetchRoomDetails(roomId) {
+        $.getJSON(`http://localhost:8080/rooms/${roomId}`, function(room) {
+            maxGuestsAllowed = room.guestsCount;
+            $('#numberOfGuests').attr({'max': room.guestsCount, 'value': room.guestsCount});
+            displayRoomDetails(room);
+        }).fail(function() {
+            alert('Error fetching room details.');
+        });
+    }
+
+    function displayRoomDetails(room) {
+        $('#roomDetails').html(`
+            <h3>${room.type} Room Details</h3>
+            <p>Room Number: ${room.number}</p>
+            <p>Price per Night: $${room.pricePerNight.toFixed(2)}</p>
+            <p>Maximum Guests: ${room.guestsCount}</p>
+            <p>Availability: ${room.availability ? 'Available' : 'Not Available'}</p>
+        `);
+    }
+
+    $('#addGuestButton').click(function() {
+        var guestsContainer = $('#guestsContainer');
+        if (guestsContainer.children().length < maxGuestsAllowed) {
+            guestsContainer.append(createGuestInput());
+            updateSubmitButtonState();
+        } else {
+            alert('You cannot add more guests than the room capacity.');
+        }
+    });
+
+    function createGuestInput() {
+        return `
+            <div class="form-inline mb-2">
+                <input type="text" class="form-control mr-sm-2" placeholder="Guest's First Name" name="guestFirstName[]" required>
+                <input type="text" class="form-control mr-sm-2" placeholder="Guest's Last Name" name="guestLastName[]" required>
+                <input type="email" class="form-control mr-sm-2" placeholder="Guest's Email" name="guestEmail[]" required>
+                <button type="button" class="btn btn-danger" onclick="removeGuest(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    function updateSubmitButtonState() {
+        var guestsCount = $('#guestsContainer').children().length;
+        $('#submitReservationButton').prop('disabled', guestsCount === 0);
+    }
+
+    window.removeGuest = function(element) {
+        $(element).closest('.form-inline').remove();
+        var guestsContainer = $('#guestsContainer');
+        $('#numberOfGuests').val(guestsContainer.children().length);
+        updateSubmitButtonState();
+    };
+
+    $('#reservationForm').submit(function(event) {
+        event.preventDefault();
+    });
+</script>
+</body>
+</html>
