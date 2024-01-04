@@ -5,18 +5,18 @@ import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Room;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.HotelRepository;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.RoomRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class RoomService {
     private final RoomRepository repository;
     private final HotelRepository hotelRepository;
-    public RoomService(RoomRepository repository, HotelRepository hotelRepository) {
-        this.repository = repository;
-        this.hotelRepository = hotelRepository;
-    }
+
     public Room create(Room room) {
         return repository.save(room);
     }

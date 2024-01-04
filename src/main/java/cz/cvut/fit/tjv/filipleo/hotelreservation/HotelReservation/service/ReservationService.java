@@ -10,20 +10,19 @@ import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.Cus
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.GuestRepository;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.ReservationRepository;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.RoomRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class ReservationService {
     private final ReservationRepository repository;
     private final RoomRepository roomRepository;
 
-    public ReservationService(ReservationRepository repository, RoomRepository roomRepository) {
-        this.repository = repository;
-        this.roomRepository = roomRepository;
-    }
     public Reservation readById(Long reservationId) {
         return repository.findById(reservationId)
                 .orElseThrow(() -> new EntityNotFoundException("Reservation not found with ID: " + reservationId));

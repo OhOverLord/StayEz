@@ -2,20 +2,23 @@ package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service;
 
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Customer;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Reservation;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.CustomerDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.CustomerWithThisEmailAlreadyExistsException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityNotFoundException;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.CustomerMapper;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.CustomerRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class CustomerService {
     private final CustomerRepository repository;
-    public CustomerService(CustomerRepository repository) {
-        this.repository = repository;
-    }
+    private final CustomerMapper customerMapper;
     public Customer getById(Long customerId) {
         return repository.findById(customerId).orElse(null);
     }
@@ -29,22 +32,23 @@ public class CustomerService {
         }
         return customer;
     }
-    public Customer create(Customer customer) {
-        Collection<Customer> customersWithEmail = repository.findAllByEmail(customer.getEmail());
+    public Customer create(CustomerDTO customerDTO) {
+        Collection<Customer> customersWithEmail = repository.findAllByEmail(customerDTO.getEmail());
         if (!customersWithEmail.isEmpty()) {
-            throw new CustomerWithThisEmailAlreadyExistsException(customer.getEmail());
+            throw new CustomerWithThisEmailAlreadyExistsException(customerDTO.getEmail());
         }
+        Customer customer = customerMapper.toEntity(customerDTO);
         return repository.save(customer);
     }
-    public Customer update(Long customerId, Customer customerDetails) {
+    public Customer update(Long customerId, CustomerDTO customerDTO) {
         Customer existingCustomer = repository.findById(customerId)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found with ID: " + customerId));
 
-        existingCustomer.setFirstName(customerDetails.getFirstName());
-        existingCustomer.setLastName(customerDetails.getLastName());
-        existingCustomer.setEmail(customerDetails.getEmail());
-        existingCustomer.setPhoneNumber(customerDetails.getPhoneNumber());
-        existingCustomer.setAddress(customerDetails.getAddress());
+        existingCustomer.setFirstName(customerDTO.getFirstName());
+        existingCustomer.setLastName(customerDTO.getLastName());
+        existingCustomer.setEmail(customerDTO.getEmail());
+        existingCustomer.setPhoneNumber(customerDTO.getPhoneNumber());
+        existingCustomer.setAddress(customerDTO.getAddress());
 
         Collection<Customer> customersWithEmail = repository.findAllByEmail(existingCustomer.getEmail());
         if (!customersWithEmail.isEmpty() && customersWithEmail.stream().noneMatch(c -> c.getId().equals(customerId))) {
