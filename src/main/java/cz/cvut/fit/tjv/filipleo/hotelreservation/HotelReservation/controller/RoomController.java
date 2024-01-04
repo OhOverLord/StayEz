@@ -1,21 +1,21 @@
 package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.controller;
 
-import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Hotel;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Room;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.RoomDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.RoomMapper;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service.RoomService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/rooms")
+@RequiredArgsConstructor
 public class RoomController {
     private final RoomService service;
-
-    public RoomController(RoomService service) {
-        this.service = service;
-    }
+    private final RoomMapper roomMapper;
 
     @GetMapping
     public Iterable<Room> returnAll() {
@@ -33,10 +33,10 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Room> returnById(@PathVariable Long id) {
+    public ResponseEntity<RoomDTO> returnById(@PathVariable Long id) {
         try {
             Room readRoom = service.readById(id);
-            return new ResponseEntity<>(readRoom, HttpStatus.OK);
+            return new ResponseEntity<>(roomMapper.toDto(readRoom), HttpStatus.OK);
         } catch (EntityDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -45,10 +45,10 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<Room> create(@RequestBody Room room) {
+    public ResponseEntity<RoomDTO> create(@RequestBody RoomDTO roomDTO) {
         try {
-            Room createdRoom = service.create(room);
-            return new ResponseEntity<>(createdRoom, HttpStatus.CREATED);
+            Room createdRoom = service.create(roomDTO);
+            return new ResponseEntity<>(roomMapper.toDto(createdRoom), HttpStatus.CREATED);
         } catch (EntityDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -57,10 +57,10 @@ public class RoomController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Room> update(@PathVariable Long id, @RequestBody Room room) {
+    public ResponseEntity<RoomDTO> update(@PathVariable Long id, @RequestBody RoomDTO roomDTO) {
         try {
-            Room updatedRoom = service.update(id, room);
-            return ResponseEntity.ok(updatedRoom);
+            Room updatedRoom = service.update(id, roomDTO);
+            return ResponseEntity.ok(roomMapper.toDto(updatedRoom));
         } catch (EntityDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
