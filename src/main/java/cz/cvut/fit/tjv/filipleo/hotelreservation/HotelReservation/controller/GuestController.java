@@ -1,7 +1,9 @@
 package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.controller;
 
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Guest;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.GuestDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.GuestMapper;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service.GuestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class GuestController {
     private final GuestService service;
+    private final GuestMapper guestMapper;
 
     @GetMapping
     public Iterable<Guest> returnAll()  {
@@ -32,9 +35,9 @@ public class GuestController {
     }
 
     @PostMapping
-    public ResponseEntity<Guest> create(@RequestBody Guest guest) {
+    public ResponseEntity<Guest> create(@RequestBody GuestDTO guestDTO) {
         try {
-            Guest createdGuest = service.create(guest);
+            Guest createdGuest = service.create(guestDTO);
             return new ResponseEntity<>(createdGuest, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -42,10 +45,10 @@ public class GuestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Guest> update(@PathVariable Long id, @RequestBody Guest guest) {
+    public ResponseEntity<GuestDTO> update(@PathVariable Long id, @RequestBody GuestDTO guestDTO) {
         try {
-            Guest updatedGuest = service.update(id, guest);
-            return ResponseEntity.ok(updatedGuest);
+            Guest updatedGuest = service.update(id, guestDTO);
+            return ResponseEntity.ok(guestMapper.toDto(updatedGuest));
         } catch (EntityDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
