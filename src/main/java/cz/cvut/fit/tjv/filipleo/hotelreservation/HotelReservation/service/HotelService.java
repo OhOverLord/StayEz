@@ -2,7 +2,9 @@ package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service;
 
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Hotel;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Room;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.HotelDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityNotFoundException;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.HotelMapper;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.HotelRepository;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +18,10 @@ import java.util.List;
 public class HotelService {
     private final HotelRepository repository;
     private final RoomRepository roomRepository;
+    private final HotelMapper hotelMapper;
 
-    public Hotel create(Hotel hotel) {
+    public Hotel create(HotelDTO hotelDTO) {
+        Hotel hotel = hotelMapper.toEntity(hotelDTO);
         return repository.save(hotel);
     }
     public Hotel readById(Long id) {
@@ -27,16 +31,16 @@ public class HotelService {
     public List<Hotel> readAll() {
         return repository.findAll();
     }
-    public Hotel update(Long hotelId, Hotel hotelDetails) {
+    public Hotel update(Long hotelId, HotelDTO hotelDTO) {
         Hotel existingHotel = repository.findById(hotelId)
                 .orElseThrow(() -> new EntityNotFoundException("Hotel not found with ID: " + hotelId));
 
-        existingHotel.setName(hotelDetails.getName());
-        existingHotel.setAddress(hotelDetails.getAddress());
-        existingHotel.setDescription(hotelDetails.getDescription());
-        existingHotel.setStars(hotelDetails.getStars());
-        existingHotel.setCountry(hotelDetails.getCountry());
-        existingHotel.setCity(hotelDetails.getCity());
+        existingHotel.setName(hotelDTO.getName());
+        existingHotel.setAddress(hotelDTO.getAddress());
+        existingHotel.setDescription(hotelDTO.getDescription());
+        existingHotel.setStars(hotelDTO.getStars());
+        existingHotel.setCountry(hotelDTO.getCountry());
+        existingHotel.setCity(hotelDTO.getCity());
         return repository.save(existingHotel);
     }
     public void delete(Long id) {
