@@ -1,7 +1,9 @@
 package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.controller;
 
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Customer;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Guest;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.CustomerDTO;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.GuestDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.CustomerWithThisEmailAlreadyExistsException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityNotFoundException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.CustomerMapper;
@@ -11,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/customers")
 @RequiredArgsConstructor
@@ -18,8 +22,11 @@ public class CustomerController {
     private final CustomerService service;
     private final CustomerMapper customerMapper;
     @GetMapping
-    public Iterable<Customer> returnAll() {
-        return service.readAll();
+    public List<CustomerDTO> findAll() {
+        List<Customer> guests = service.readAll();
+        return guests.stream()
+                .map(customerMapper::toDto)
+                .toList();
     }
 
     @GetMapping("/{id}")

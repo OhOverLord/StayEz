@@ -1,6 +1,8 @@
 package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.controller;
 
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Reservation;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Room;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.ReservationDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.RoomDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.RoomMapper;
@@ -10,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/rooms")
 @RequiredArgsConstructor
@@ -18,8 +22,11 @@ public class RoomController {
     private final RoomMapper roomMapper;
 
     @GetMapping
-    public Iterable<Room> returnAll() {
-        return service.readAll();
+    public List<RoomDTO> findAll() {
+        List<Room> rooms = service.readAll();
+        return rooms.stream()
+                .map(roomMapper::toDto)
+                .toList();
     }
 
     @DeleteMapping("/{id}")

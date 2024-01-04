@@ -19,6 +19,7 @@ public class CustomerMapperImpl implements CustomerMapper {
         Customer customer = new Customer();
         customer.setId(dto.getId());
         customer.setFirstName(dto.getFirstName());
+        customer.setLastName(dto.getLastName());
         customer.setPhoneNumber(dto.getPhoneNumber());
         customer.setEmail(dto.getEmail());
         customer.setAddress(dto.getAddress());

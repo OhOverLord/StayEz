@@ -1,7 +1,9 @@
 package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.controller;
 
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Guest;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Hotel;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.GuestDTO;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.HotelDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.GuestMapper;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service.GuestService;
@@ -9,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/guests")
@@ -18,8 +22,11 @@ public class GuestController {
     private final GuestMapper guestMapper;
 
     @GetMapping
-    public Iterable<Guest> returnAll()  {
-        return service.readAll();
+    public List<GuestDTO> findAll() {
+        List<Guest> guests = service.readAll();
+        return guests.stream()
+                .map(guestMapper::toDto)
+                .toList();
     }
 
     @GetMapping("/{id}")

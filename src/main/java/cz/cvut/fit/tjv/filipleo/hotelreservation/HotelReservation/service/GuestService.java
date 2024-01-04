@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class GuestService {
@@ -19,7 +21,7 @@ public class GuestService {
         Guest guest = guestMapper.toEntity(guestDTO);
         return repository.save(guest);
     }
-    public Iterable<Guest> readAll() {
+    public List<Guest> readAll() {
         return repository.findAll();
     }
     public Guest readById(Long id) {

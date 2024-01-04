@@ -23,8 +23,11 @@ public class ReservationController {
     private final ReservationMapper reservationMapper;
 
     @GetMapping
-    public Iterable<Reservation> returnAll() {
-        return service.readAll();
+    public List<ReservationDTO> findAll() {
+        List<Reservation> reservations = service.readAll();
+        return reservations.stream()
+                .map(reservationMapper::toDto)
+                .toList();
     }
 
     @GetMapping("/{id}")

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
@@ -22,7 +23,7 @@ public class CustomerService {
     public Customer getById(Long customerId) {
         return repository.findById(customerId).orElse(null);
     }
-    public Iterable<Customer> readAll() {
+    public List<Customer> readAll() {
         return repository.findAll();
     }
     public Customer readById(Long customerId) {
