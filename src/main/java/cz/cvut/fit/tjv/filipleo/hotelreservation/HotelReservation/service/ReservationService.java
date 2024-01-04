@@ -3,9 +3,11 @@ package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Guest;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Reservation;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Room;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.ReservationDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityNotFoundException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.RoomNotAvailableException;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.ReservationMapper;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.CustomerRepository;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.GuestRepository;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.ReservationRepository;
@@ -22,6 +24,7 @@ import java.util.*;
 public class ReservationService {
     private final ReservationRepository repository;
     private final RoomRepository roomRepository;
+    private final ReservationMapper reservationMapper;
 
     public Reservation readById(Long reservationId) {
         return repository.findById(reservationId)
@@ -45,25 +48,26 @@ public class ReservationService {
         return overlappingReservations.isEmpty();
     }
 
-    public Reservation create(Reservation reservation) throws RoomNotAvailableException {
-        if (!isRoomAvailable(reservation.getRoom().getId(), reservation.getCheckInDate(), reservation.getCheckOutDate())) {
+    public Reservation create(ReservationDTO reservationDTO) throws RoomNotAvailableException {
+        if (!isRoomAvailable(reservationDTO.getRoomId(), reservationDTO.getCheckInDate(), reservationDTO.getCheckOutDate())) {
             throw new RoomNotAvailableException("Room is not available for the selected dates");
         }
+        Reservation reservation = reservationMapper.toEntity(reservationDTO);
         return repository.save(reservation);
     }
 
-    public Reservation update(Long reservationId, Reservation reservationDetails) {
+    public Reservation update(Long reservationId, ReservationDTO reservationDTO) {
         Reservation existingReservation = repository.findById(reservationId)
                 .orElseThrow(() -> new EntityDoesNotExistException("Reservation not found with ID: " + reservationId));
 
-        Long roomId = reservationDetails.getRoom().getId();
+        Long roomId = reservationDTO.getRoomId();
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new EntityDoesNotExistException("Room not found with ID: " + roomId));
 
-        existingReservation.setCheckInDate(reservationDetails.getCheckInDate());
-        existingReservation.setCheckOutDate(reservationDetails.getCheckOutDate());
-        existingReservation.setNumberOfGuests(reservationDetails.getNumberOfGuests());
-        existingReservation.setStatus(reservationDetails.getStatus());
+        existingReservation.setCheckInDate(reservationDTO.getCheckInDate());
+        existingReservation.setCheckOutDate(reservationDTO.getCheckOutDate());
+        existingReservation.setNumberOfGuests(reservationDTO.getNumberOfGuests());
+        existingReservation.setStatus(reservationDTO.getStatus());
 
         existingReservation.setRoom(room);
         return repository.save(existingReservation);
