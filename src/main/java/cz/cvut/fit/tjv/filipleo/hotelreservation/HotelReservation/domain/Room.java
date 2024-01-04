@@ -1,6 +1,7 @@
 package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "room")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "room")
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +25,12 @@ public class Room {
     private String type;
     private Double pricePerNight;
     private Boolean availability;
-    @OneToMany(mappedBy = "room")
-    @JsonManagedReference("room-reservation")
-    private List<Reservation> reservations = new ArrayList<>();
-    @ManyToOne
-    @JoinColumn(name = "hotel_id")
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
+    @JoinColumn(name = "hotel_id")
     private Hotel hotel;
+
+    @OneToMany(mappedBy = "room")
+    private List<Reservation> reservations;
 }

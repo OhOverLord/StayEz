@@ -11,10 +11,10 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "hotel")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "hotel")
 public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,8 @@ public class Hotel {
     private Integer stars;
     private String country;
     private String city;
-    @OneToMany(mappedBy = "hotel")
+
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<Room> rooms = new ArrayList<>();
+    private List<Room> rooms;
 }

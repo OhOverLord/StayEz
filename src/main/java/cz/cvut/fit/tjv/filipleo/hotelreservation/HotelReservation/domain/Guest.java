@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "guest")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "guest")
 public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +22,6 @@ public class Guest {
     private String lastName;
     private String email;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "guest_reservations",
-            joinColumns = @JoinColumn(name = "guest_id"),
-            inverseJoinColumns = @JoinColumn(name = "reservation_id")
-    )
-    private Set<Reservation> reservations = new HashSet<>();
+    @ManyToMany(mappedBy = "guests")
+    private List<Reservation> reservations;
 }

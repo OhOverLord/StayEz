@@ -1,6 +1,5 @@
 package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service;
 
-import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Customer;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Guest;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Reservation;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Room;
@@ -13,7 +12,6 @@ import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.Res
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -46,7 +44,7 @@ public class ReservationService {
                 .orElseThrow(() -> new EntityDoesNotExistException("Reservation not found with ID: " + reservationId));
         repository.delete(reservation);
     }
-    public boolean isRoomAvailable(Long roomId, LocalDate checkInDate, LocalDate checkOutDate) {
+    public boolean isRoomAvailable(Long roomId, Date checkInDate, Date checkOutDate) {
         List<Reservation> overlappingReservations = repository.findOverlappingReservations(roomId, checkInDate, checkOutDate);
         return overlappingReservations.isEmpty();
     }
