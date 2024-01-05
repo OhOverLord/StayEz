@@ -1,10 +1,13 @@
 package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.controller;
 
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Customer;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Guest;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Hotel;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.GuestDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.HotelDTO;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.CustomerWithThisEmailAlreadyExistsException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.GuestWithThisEmailAlreadyExistsException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.GuestMapper;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service.GuestService;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +33,10 @@ public class GuestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Guest> returnById(@PathVariable Long id) {
+    public ResponseEntity<GuestDTO> returnById(@PathVariable Long id) {
         try {
             Guest readGuest = service.readById(id);
-            return new ResponseEntity<>(readGuest, HttpStatus.OK);
+            return new ResponseEntity<>(guestMapper.toDto(readGuest), HttpStatus.OK);
         } catch (EntityDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -42,12 +45,15 @@ public class GuestController {
     }
 
     @PostMapping
-    public ResponseEntity<Guest> create(@RequestBody GuestDTO guestDTO) {
+    public ResponseEntity<GuestDTO> create(@RequestBody GuestDTO guestDTO) {
         try {
-            Guest createdGuest = service.create(guestDTO);
-            return new ResponseEntity<>(createdGuest, HttpStatus.CREATED);
+            Guest newGuest = service.create(guestDTO);
+            return new ResponseEntity<>(guestMapper.toDto(newGuest), HttpStatus.OK);
+        } catch (GuestWithThisEmailAlreadyExistsException e) {
+            Guest existingGuest = service.readByGuestEmail(guestDTO.getEmail());
+            return new ResponseEntity<>(guestMapper.toDto(existingGuest), HttpStatus.CONFLICT);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

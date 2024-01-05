@@ -66,13 +66,13 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Customer> create(@RequestBody CustomerDTO customerDTO) {
+    public ResponseEntity<CustomerDTO> create(@RequestBody CustomerDTO customerDTO) {
         try {
             Customer newCustomer = service.create(customerDTO);
-            return new ResponseEntity<>(newCustomer, HttpStatus.OK);
+            return new ResponseEntity<>(customerMapper.toDto(newCustomer), HttpStatus.OK);
         } catch (CustomerWithThisEmailAlreadyExistsException e) {
             Customer existingCustomer = service.readByCustomerEmail(customerDTO.getEmail());
-            return new ResponseEntity<>(existingCustomer, HttpStatus.CONFLICT);
+            return new ResponseEntity<>(customerMapper.toDto(existingCustomer), HttpStatus.CONFLICT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -42,9 +42,11 @@ public class CustomerMapperImpl implements CustomerMapper {
         dto.setPhoneNumber(entity.getPhoneNumber());
         dto.setEmail(entity.getEmail());
         dto.setAddress(entity.getAddress());
-        dto.setReservationIds(entity.getReservations().stream()
-                .map(Reservation::getId)
-                .toList());
+        if (entity.getReservations() != null && !entity.getReservations().isEmpty()) {
+            dto.setReservationIds(entity.getReservations().stream()
+                    .map(Reservation::getId)
+                    .toList());
+        }
         return dto;
     }
 }
