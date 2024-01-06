@@ -4,6 +4,7 @@ import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Hotel;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Reservation;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Room;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityNotFoundException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.RoomRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class RoomServiceTest {
 
         when(roomRepository.findById(roomId)).thenReturn(Optional.empty());
 
-        assertThrows(EntityDoesNotExistException.class, () -> {
+        assertThrows(EntityNotFoundException.class, () -> {
             roomService.readById(roomId);
         });
     }
