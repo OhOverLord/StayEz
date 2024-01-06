@@ -33,7 +33,7 @@ public class GuestService {
         return repository.findAll();
     }
     public Guest readById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new EntityDoesNotExistException("Guest not found with ID: " + id));
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Guest not found with ID: " + id));
     }
     public Guest update(Long id, GuestDTO guestDTO) {
         Guest existingGuest = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Guest not found with ID: " + id));

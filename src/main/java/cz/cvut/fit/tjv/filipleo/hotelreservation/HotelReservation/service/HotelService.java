@@ -1,5 +1,6 @@
 package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service;
 
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Customer;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Hotel;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Room;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.HotelDTO;
@@ -24,10 +25,17 @@ public class HotelService {
         Hotel hotel = hotelMapper.toEntity(hotelDTO);
         return repository.save(hotel);
     }
-    public Hotel readById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Hotel not found with ID: " + id));
+    public Hotel getById(Long hotelId) {
+        return repository.findById(hotelId).orElse(null);
     }
+    public Hotel readById(Long hotelId) {
+        Hotel hotel = getById(hotelId);
+        if (hotel == null) {
+            throw new EntityNotFoundException("Hotel not found with ID: " + hotelId);
+        }
+        return hotel;
+    }
+
     public List<Hotel> readAll() {
         return repository.findAll();
     }

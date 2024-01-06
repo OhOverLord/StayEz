@@ -5,6 +5,7 @@ import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Room;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.ReservationDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.RoomDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityNotFoundException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.RoomMapper;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,7 @@ public class RoomController {
         try {
             Room readRoom = service.readById(id);
             return new ResponseEntity<>(roomMapper.toDto(readRoom), HttpStatus.OK);
-        } catch (EntityDoesNotExistException e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

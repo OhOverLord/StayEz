@@ -3,6 +3,7 @@ package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.controller;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Reservation;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.ReservationDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityNotFoundException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.RoomNotAvailableException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.ReservationMapper;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service.ReservationService;
@@ -33,7 +34,7 @@ public class ReservationController {
         try {
             Reservation readReservation = service.readById(id);
             return new ResponseEntity<>(reservationMapper.toDto(readReservation), HttpStatus.OK);
-        } catch (EntityDoesNotExistException e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

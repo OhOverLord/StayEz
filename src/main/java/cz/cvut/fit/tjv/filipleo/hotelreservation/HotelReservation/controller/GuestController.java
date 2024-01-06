@@ -7,6 +7,7 @@ import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.GuestDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.HotelDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.CustomerWithThisEmailAlreadyExistsException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityNotFoundException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.GuestWithThisEmailAlreadyExistsException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.GuestMapper;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service.GuestService;
@@ -37,7 +38,7 @@ public class GuestController {
         try {
             Guest readGuest = service.readById(id);
             return new ResponseEntity<>(guestMapper.toDto(readGuest), HttpStatus.OK);
-        } catch (EntityDoesNotExistException e) {
+        } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

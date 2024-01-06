@@ -4,6 +4,7 @@ import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Hotel;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Room;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.RoomDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityNotFoundException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.RoomMapper;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.HotelRepository;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.RoomRepository;
@@ -26,7 +27,7 @@ public class RoomService {
     }
     public Room readById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new EntityDoesNotExistException("Room not found with ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Room not found with ID: " + id));
     }
     public List<Room> readAll() {
         return repository.findAll();
