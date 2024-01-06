@@ -1,8 +1,6 @@
 package cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.controller;
 
-import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Hotel;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Reservation;
-import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Room;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.ReservationDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.RoomNotAvailableException;

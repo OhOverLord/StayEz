@@ -5,6 +5,7 @@ import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.domain.Guest;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.CustomerDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.dto.GuestDTO;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.CustomerWithThisEmailAlreadyExistsException;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityDoesNotExistException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityNotFoundException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.CustomerMapper;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.service.CustomerService;
@@ -35,6 +36,18 @@ public class CustomerController {
             Customer readCustomer = service.readById(id);
             return new ResponseEntity<>(customerMapper.toDto(readCustomer), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/email/{customerEmail}")
+    public ResponseEntity<CustomerDTO> returnByCustomerEmail(@PathVariable String customerEmail) {
+        try {
+            Customer readCustomer = service.readByCustomerEmail(customerEmail);
+            return new ResponseEntity<>(customerMapper.toDto(readCustomer), HttpStatus.OK);
+        } catch (EntityDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
