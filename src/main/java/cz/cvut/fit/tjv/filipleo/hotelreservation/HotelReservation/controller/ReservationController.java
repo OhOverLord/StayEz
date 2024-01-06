@@ -84,6 +84,8 @@ public class ReservationController {
                     .map(reservationMapper::toDto)
                     .toList();
             return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
+        } catch (EntityDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

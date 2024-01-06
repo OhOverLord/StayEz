@@ -8,10 +8,7 @@ import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.Ent
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.EntityNotFoundException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.exceptions.RoomNotAvailableException;
 import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.mappers.ReservationMapper;
-import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.CustomerRepository;
-import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.GuestRepository;
-import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.ReservationRepository;
-import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.RoomRepository;
+import cz.cvut.fit.tjv.filipleo.hotelreservation.HotelReservation.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -25,6 +22,8 @@ public class ReservationService {
     private final ReservationRepository repository;
     private final RoomRepository roomRepository;
     private final ReservationMapper reservationMapper;
+    private final CustomerRepository customerRepository;
+    private final HotelRepository hotelRepository;
 
     public Reservation readById(Long reservationId) {
         return repository.findById(reservationId)
@@ -74,6 +73,14 @@ public class ReservationService {
     }
 
     public List<Reservation> findReservationsByCustomerAndHotel(Long customerId, Long hotelId) {
+        if (!customerRepository.existsById(customerId)) {
+            throw new EntityDoesNotExistException("Customer not found with ID: " + customerId);
+        }
+
+        if (!hotelRepository.existsById(hotelId)) {
+            throw new EntityDoesNotExistException("Hotel not found with ID: " + hotelId);
+        }
+
         return repository.findReservationsByCustomerAndHotel(customerId, hotelId);
     }
 }
