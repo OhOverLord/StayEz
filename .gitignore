@@ -42,8 +42,6 @@ native/
 jdks/
 
 # Gradle Wrapper
-gradlew
-gradlew.bat
 /wrapper/
 
 # IntelliJ IDEA
