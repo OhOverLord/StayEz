@@ -2,14 +2,19 @@ stages:
   - build
   - test
 
+variables:
+  GRADLE_USER_HOME: "${CI_PROJECT_DIR}/.gradle"
+
 build_job:
   stage: build
-  image: openjdk:17-jdk
+  image: eclipse-temurin:17-alpine
   script:
-    - ./gradlew build
+    - chmod +x gradlew
+    - ./gradlew build --no-daemon
 
 test_job:
   stage: test
-  image: openjdk:17-jdk
+  image: eclipse-temurin:17-alpine
   script:
-    - ./gradlew test
+    - chmod +x gradlew
+    - ./gradlew test --no-daemon
