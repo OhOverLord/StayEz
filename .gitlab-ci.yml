@@ -1,0 +1,15 @@
+stages:
+  - build
+  - test
+
+build_job:
+  stage: build
+  image: openjdk:17-jdk
+  script:
+    - ./gradlew build
+
+test_job:
+  stage: test
+  image: openjdk:17-jdk
+  script:
+    - ./gradlew test
