@@ -10,10 +10,10 @@ build_job:
   image: openjdk:17-jdk
   script:
     - chmod +x gradlew
-    - ./gradlew build --no-daemon
+    - ./gradlew build
 test_job:
   stage: test
   image: openjdk:17-jdk
   script:
     - chmod +x gradlew
-    - ./gradlew test --no-daemon
+    - ./gradlew test
