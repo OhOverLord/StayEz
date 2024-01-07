@@ -41,9 +41,6 @@ daemon/
 native/
 jdks/
 
-# Gradle Wrapper
-/wrapper/
-
 # IntelliJ IDEA
 .idea/
 *.iws

@@ -7,14 +7,13 @@ variables:
 
 build_job:
   stage: build
-  image: eclipse-temurin:17-alpine
+  image: openjdk:17-jdk
   script:
     - chmod +x gradlew
     - ./gradlew build --no-daemon
-
 test_job:
   stage: test
-  image: eclipse-temurin:17-alpine
+  image: openjdk:17-jdk
   script:
     - chmod +x gradlew
     - ./gradlew test --no-daemon
