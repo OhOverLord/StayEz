@@ -18,12 +18,5 @@ INSERT INTO room (guests_count, number, type, price_per_night, availability, hot
 
 -- Insert customers
 INSERT INTO customer (first_name, last_name, phone_number, email, address) VALUES
-('John', 'Doe', '123-456-7890', 'john.doe@example.com', '123 Main St, Townsville'),
-('Jane', 'Smith', '234-567-8901', 'jane.smith@example.com', '456 Elm St, Cityville'),
-('Alice', 'Johnson', '345-678-9012', 'alice.johnson@example.com', '789 Oak St, Villageville');
+('Jane', 'Smith', '234-567-8901', 'jane.smith@example.com', '456 Elm St, Cityville');
 
--- Insert guests
-INSERT INTO guest (first_name, last_name, email) VALUES
-('Michael', 'Brown', 'michael.brown@example.com'),
-('Sarah', 'Davis', 'sarah.davis@example.com'),
-('Robert', 'Miller', 'robert.miller@example.com');
