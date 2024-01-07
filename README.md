@@ -1,4 +1,9 @@
 # Hotel reservation
+## Run
+## Running
+- `git clone git@gitlab.fit.cvut.cz:filipleo/stayez-client.git`
+- `docker-compose build`
+- `docker-compose up`
 ## Description
 This semester project involves building a three-tier hotel room reservation application using the Spring framework in Java. It utilizes object-relational mapping (ORM) in the persistent layer and is designed to work with a relational database server capable of handling multiple requests. The project includes at least three entities with CRUD operations, a minimum of one many-to-many relationship, and an additional query, preferably implemented in JPQL. The business logic layer supports all data operations, including CRUD for all entities and many-to-many relationships.
 
